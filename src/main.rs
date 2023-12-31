@@ -7,10 +7,35 @@ use std::thread;
 use std::time::Duration;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    let header: &'static str = "
+        +---------------------------+
+        | A HTTP Web Server in Rust |
+        +---------------------------+
+        
+            Author: ahmed-aljabri
+            
+            ";
+
+    println!("{}", header);
+
+    let validated_port= websvr::getvalidport();
+
+    let server_address = format!("127.0.0.1:{}", validated_port);
+
+    let listener = match TcpListener::bind(&server_address){
+        Ok(listener) => {
+            println!("Server initiated at address: {}", &server_address);
+            listener
+        },
+        Err(error) => panic!("Cannot run the server on this address, error {}", error),
+    }; 
+
+
+    // Set threadpool size
     let pool = ThreadPool::new(4);
 
-    for stream in listener.incoming().take(2) {
+    for stream in listener.incoming() {
         let stream = stream.unwrap();
 
         pool.execute(|| {

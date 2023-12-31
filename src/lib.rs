@@ -1,6 +1,7 @@
+
 use std::{
     sync::{mpsc, Arc, Mutex},
-    thread,
+    thread, num::ParseIntError,
 };
 
 pub struct ThreadPool {
@@ -89,4 +90,72 @@ impl Worker {
             thread: Some(thread),
         }
     }
+}
+
+
+
+/// A unsigned 16-bit integer (0-65535) identifying the port address.
+struct PortNumber{
+    port: u16
+}
+
+
+impl PortNumber{
+    /// Checks if the port is within the reserved range for known TCP/IP services.
+    /// 
+    /// Note: This will prevent the user from selecting a port within this range range but
+    /// does not check if the port is actually unused.
+
+    fn is_reserved(&self) -> bool{
+        if self.port <= 1023 {
+            println!("This port address is within the reserved range (0-1023), please select another port number");
+            true
+        }else {
+            false
+        }
+    }
+}
+
+/// Asks the user to specify a port number for the HTTP server.
+/// 
+/// This function will create a PortNumber type using the entered value that will force the constraints and validation needed.
+/// 
+/// If an invalid port is entered, the user will be guided to reattempt.
+pub fn getvalidport() -> String{
+
+    println!("Enter the port number");
+
+    let mut valid_port = false;
+
+    let mut set_port = PortNumber{port: 7878}; // default port
+
+    while !valid_port{
+
+        let mut port_address = String::new();
+        let _input = std::io::stdin().read_line(&mut port_address).unwrap();
+
+        let result: Result<u16, ParseIntError> = port_address.trim().parse();
+
+        match result{
+            Ok(port) => {
+                set_port.port = port;
+                if set_port.is_reserved(){
+                    ()
+                }else{
+                    set_port.port = port;
+                    valid_port = true;
+                }
+            },
+            Err(error) => { 
+                println!("Entered value [{}] is not a valid port number, please enter a number between 1023 and 65535.\n[Error Message]: {}",port_address, error);
+                ()
+            
+            },
+        }
+
+
+    }
+
+    set_port.port.to_string()
+
 }
