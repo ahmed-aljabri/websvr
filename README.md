@@ -1,9 +1,13 @@
 # Rust HTTP server implementation
 
-The goal of this project is to pick from where [The Rust Book](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html) left off and enhance it to become more useful and complete.
+The goal of this project is to pick from where [The Rust Book](https://doc.rust-lang.org/book/ch20-00-final-project-a-web-server.html) left off and enhance its implementation from a simplistic & demonstrative state to a more robust implementation.
 
-The enhancements / modifications will be documented and shared in my blog.
+
+Such enhancements include:
+- Swap calls to _unwrap_ with proper error handling.
+- Document _Threadpool_ further and its public methods.
+- Test the library's functionality.
 
 ## Disclaimer
 
-This project is solely for educational purposes (It was written to learn rust) and does not meet the standards to be utilized in production environments. 
+This project is solely for educational purposes (It was written to learn rust).
